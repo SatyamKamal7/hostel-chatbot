@@ -14,33 +14,32 @@ function App() {
   }, [messages]);
 
   const sendMessage = async () => {
-    if (!input.trim() || loading) return; // 🚨 prevents duplicate
-
-    setLoading(true);
+    if (!input.trim()) return;
 
     const userMessage = { role: "user", content: input };
-
-    setMessages((prev) => [
-      ...prev,
-      userMessage,
-      { role: "assistant", content: "Typing..." }
-    ]);
+    setMessages((prev) => [...prev, userMessage]);
 
     setInput("");
 
+  // Typing indicator
+    setMessages((prev) => [
+      ...prev,
+      { role: "assistant", content: "Typing..." },
+    ]);
+
     try {
       const res = await fetch(
-        "https://hostel-chatbot-w4ct.onrender.com/chat",
+        "https://hostel-chatbot-w4ct.onrender.com/chat",  // 👈 IMPORTANT
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-            body: JSON.stringify({
-              user_query: input,
-            }),
-          }
-        );
+          body: JSON.stringify({
+            user_query: input,
+          }),
+        }
+      );
 
       const data = await res.json();
 
@@ -53,8 +52,8 @@ function App() {
         return updated;
       });
 
-    } 
-    catch {
+    } catch (err) {
+      console.error(err); // 👈 VERY IMPORTANT
       setMessages((prev) => {
         const updated = [...prev];
         updated[updated.length - 1] = {
@@ -62,9 +61,8 @@ function App() {
           content: "Server error 😢",
         };
         return updated;
-        });
-      }
-    setLoading(false);
+      });
+    }
   };
 
   return (

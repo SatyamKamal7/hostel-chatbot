@@ -18,7 +18,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 # 📦 Request body model
 class ChatRequest(BaseModel):
     user_query: str
