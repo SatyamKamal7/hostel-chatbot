@@ -30,7 +30,7 @@ function App() {
 
     try {
       const res = await fetch(
-        "https://https://hostel-chatbot-w4ct.onrender.com/chat",
+        "https://hostel-chatbot-w4ct.onrender.com/chat",
         {
           method: "POST",
           headers: {
