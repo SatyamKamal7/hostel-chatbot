@@ -120,16 +120,12 @@ def chat(user_query: str):
         if not filtered_rooms:
             response = "No rooms match your criteria."
         else:
-            # Only show top 3 rooms in chat-style
-            top_rooms = filtered_rooms[:3]
-            room_lines = []
-            for room in top_rooms:
-                facs = ", ".join(room["facilities"][:3]) + ("..." if len(room["facilities"]) > 3 else "")
-                room_lines.append(f"Room {room['room_id']} ({room['type']} sharing) ₹{room['price']}, Facilities: {facs}")
+            response = "Here are some rooms you might like:\n\n"
 
-            response = "Here are some rooms you might like:\n" + "\n".join(room_lines)
-            if len(filtered_rooms) > 3:
-                response += f"\n…and {len(filtered_rooms)-3} more rooms available."
+            for room in filtered_rooms:
+                response += f"🏠 Room {room['room_id']} ({room['type']})\n"
+                response += f"💰 Price: ₹{room['price']}\n"
+                response += f"🛠 Facilities: {', '.join(room['facilities'])}\n\n"
 
         chat_history.append({"role": "assistant", "content": response})
         return {"response": response}
@@ -148,7 +144,7 @@ def chat(user_query: str):
     results = search(user_query)
     context = " ".join(results)
 
-    response = generate_natural_response(history_context + context, user_query)
+    response = context
     chat_history.append({"role": "assistant", "content": response})
 
     return {"response": response}
